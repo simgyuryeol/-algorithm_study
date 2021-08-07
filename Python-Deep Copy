@@ -25,3 +25,9 @@ print(a, b) # [1, 0, 3, 4] [1, 0, 3, 4]
 |tuple|순서가 있는 객체 집합|immutable|
 |str|문자열|immutable|
 |frozenset|Immutable Set|immutable|
+
+|제목|내용|설명|
+|------|---|---|
+|테스트1|테스트2|테스트3|
+|테스트1|테스트2|테스트3|
+|테스트1|테스트2|테스트3|
