@@ -15,5 +15,4 @@ b[1] = 0 # 배열 b의 두번째 값을 0으로 바꿔준다.
 print(a, b) # [1, 0, 3, 4] [1, 0, 3, 4]
 
 
-![image](https://user-images.githubusercontent.com/66519915/128595752-16a8c88f-c3eb-4fac-8ca1-97eda86eb0c6.png)
-
+![image](https://user-images.githubusercontent.com/66519915/128595774-878ee70f-2eff-4f40-8289-05e01b7bd1c6.png)
