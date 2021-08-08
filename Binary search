@@ -1,0 +1,43 @@
+바이너리 서치 - 이진탐색 (binary search)
+BigO : O(log N)
+정렬된 자료를 반으로 나누어 탐색하는 방법
+주의점 : 자료는 오름차순 으로 정렬된 자료여야 한다
+
+# 바이너리 서치
+# data 중에서 target 을 검색하여 index 값을 return 한다.
+# 없으면 None을 return한다.
+
+# 바이너리 서치 구현
+def binary_search(target, data):
+    data.sort()
+    start = 0
+    end = len(data) - 1
+
+    while start <= end:
+        mid = (start + end) // 2
+
+        if data[mid] == target:
+            return mid # 함수를 끝내버린다.
+        elif data[mid] < target:
+            start = mid + 1
+        else:
+            end = mid -1
+
+    return None
+   
+
+# 바이너리 서치 재귀 구현
+def binary_search_recursion(target, start, end, data):
+    if start > end:
+        return None
+
+    mid = (start + end) // 2
+
+    if data[mid] == target:
+        return mid
+    elif data[mid] > target:
+        end = mid - 1
+    else:
+        start = mid + 1        
+
+    return binary_search_recursion(target, start, end, data)
