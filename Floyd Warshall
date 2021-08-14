@@ -30,28 +30,28 @@ https://programmers.co.kr/learn/courses/30/lessons/49191 (프로그래머스 순
 def solution(n, results):
     answer = 0
     
-    a=[[50000]*n for i in range(n)]
+    a=[[50000]*n for i in range(n)] #경기 기록 업데이트
     
-    for i in range(len(results)):
+    for i in range(len(results)): # 경기 기록 입력
         a[results[i][1]-1][results[i][0]-1]=1
         
-    for i in range(n):
+    for i in range(n): # 자신과의 경기는 0 기록
         a[i][i]=0
-    print(a)
-    for k in range(n):
+        
+    for k in range(n): # 다른 선수와 연관되어 있는 기록 업데이트
         for i in range(n):
             for j in range(n):
                 if a[k][i]==1 and a[j][k]==1:
                     a[j][i]=1
 
-    for i in range(n):
+    for i in range(n): 
         count=0
-        for j in range(n):
+        for j in range(n): # 가로줄 비교
             if a[i][j] !=50000:
                 count+=1
-            if a[j][i]!=50000:
+            if a[j][i]!=50000: # 세로줄 비교
                 count+=1
-        if count==n+1:
+        if count==n+1: # 가로 세로 값이 n+1과 같으면 모든 선수와 비교한 것이므로 answer+=1
             answer+=1 
 
     return answer
@@ -64,23 +64,51 @@ def solution(n, results):
     
     a=[[50000]*n for i in range(n)]
     
-    for i in range(len(results)):
+    for i in range(len(results)): # 경기 기록 이기면 1 지면 -1값 넣음
         a[results[i][1]-1][results[i][0]-1]=1
         a[results[i][0]-1][results[i][1]-1]=-1
     
-    for i in range(n):
+    for i in range(n): # 자신과의 경기는 0값
         a[i][i]=0
     
-    for k in range(n):
+    for k in range(n): 
         for i in range(n):
             for j in range(n):
-                if a[k][i]==1 and a[j][k]==1:
+                if a[k][i]==1 and a[j][k]==1: # 연관된 두 경기가 둘다 1이면 1값
                     a[j][i]=1
-                if a[k][i]==-1 and a[j][k]==-1:
+                if a[k][i]==-1 and a[j][k]==-1: # 둘다 -1이면 -1값을 넣어줌
                     a[j][i]=-1
 
-    for i in range(len(a)):
+    for i in range(len(a)): # 값안에 50000이 없으면 모든 선수와 비교한 것이므로 answer+=1
         if 50000 not in a[i]:
             answer+=1
 
     return answer
+    
+    3. 풀이(다른사람 풀이)
+: 
+def solution(n, results):
+    # wins[key] = key가 이긴 사람들의 집합
+    # loses[key] = key가 이기지 못한 사람들의 집합
+    wins, loses = {}, {}
+    for i in range(1, n+1):
+        wins[i], loses[i] = set(), set()
+    
+    for i in range(1, n+1):
+        for battle in results:
+            if battle[0] == i: # i의 승리. i가 이긴 사람들
+                wins[i].add(battle[1])
+            if battle[1] == i: # i의 패배. i가 진 사람들
+                loses[i].add(battle[0])
+        # i를 이긴 사람들 (loses[i]) => i에게 진 사람(wins[i])은 반드시 이긴다
+        for winner in loses[i]:
+            wins[winner].update(wins[i])
+        # i에게 진 사람들 (wins[i]) => i를 이긴 사람들(loses[i])에게는 반드시 진다
+        for loser in wins[i]:
+            loses[loser].update(loses[i])
+            
+    cnt = 0
+    for i in range(1, n+1):
+        if len(wins[i]) + len(loses[i]) == n - 1: #이긴 사람과 진 사람의 수가 n-1과 같다면 자신을 제외한 모든 선수와 비교한 것이므로 +1
+            cnt += 1
+    return cnt
