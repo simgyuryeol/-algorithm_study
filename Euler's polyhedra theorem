@@ -1,0 +1,54 @@
+오일러 다면체 정리란, 임의의 한 다면체를 구성하는 점과 선, 면이 가지는 관계를 설명한 정리를 말한다. 
+
+꼭짓점 개수(Vertics)-모서리 개수(Edge)+면(Face)의 개수=2
+입체면일 경우 V-E+F=2
+평면일 경우 V-E+F=2
+
+* 프로그래머스 방의 개수
+https://programmers.co.kr/learn/courses/30/lessons/49190
+
+* 오일러 다면체 정리를 이용한 풀이
+
+def solution(arrows):
+    point=set([(0,0)])
+    line=set()
+    move=[[0,2],[2,2],[2,0],[2,-2],[0,-2],[-2,-2],[-2,0],[-2,2]] #가운데 만나는 점을 세기 위해 2개씩 이동
+    pre_point=(0,0)
+    for A in arrows:
+        next_point=(pre_point[0]+move[A][0],  pre_point[1]+move[A][1] )  # 다음 점
+        mid_point=(pre_point[0]+move[A][0]//2,  pre_point[1]+move[A][1]//2 ) #가운데 점
+        point.add(next_point)
+        point.add(mid_point)
+        line.add((pre_point,mid_point))
+        line.add((mid_point,pre_point))
+        line.add((mid_point,next_point))
+        line.add((next_point,mid_point))
+        pre_point=next_point
+    answer = len(line)//2-len(point)+1 # 다면체 정리 E-V+1=F 면의 개수 구하기
+    return answer if answer>=0 else 0
+    
+    
+    
+* 만나는 경우의 수를 전부 생각한 풀이
+(기존의 점과 만나면서 새로운 선분일 경우, 대각선이 교차하는 경우 방이 하나씩 생긴다)
+
+from collections import defaultdict
+def solution(arrows):
+    answer = 0
+    visit = defaultdict(list)
+    x,y = 0,0
+    dx,dy = [0,1,1,1,0,-1,-1,-1],[1,1,0,-1,-1,-1,0,1]
+
+    for arrow in arrows:
+        for _ in range(2):              # 대각선 판별을 위해 2씩
+            nx = x + dx[arrow]
+            ny = y + dy[arrow]  
+            if (nx,ny) in visit and (x,y) not in visit[(nx,ny)]:    # 방문했던 점이지만 경로가 겹치지 않는 경우, 방+1
+                answer += 1
+                visit[(x,y)].append((nx,ny))
+                visit[(nx,ny)].append((x,y))
+            elif (nx,ny) not in visit:                  # 방문하지 않았던 경우
+                visit[(x,y)].append((nx,ny))            # 경로가 겹치는 경우는 따로 해줄 필요 없음
+                visit[(nx,ny)].append((x,y))
+            x,y = nx, ny        # 이동
+    return answer
