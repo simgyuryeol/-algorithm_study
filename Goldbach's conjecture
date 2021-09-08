@@ -1,0 +1,51 @@
+골드바흐의 추측(Goldbach's conjecture) 
+ 골드바흐의 강한 추천 : 2보다 큰 모든 짝수는 두 개의 소수(Prime number)의 합으로 표시할 수 있다는 것
+ 골드바흐의 약한 추측: 5보다 큰 모든 홀수는 세 소수의 합으로 나타낼 수 있다.
+
+
+* 유형 문제
+백준 15711번 (https://www.acmicpc.net/problem/15711)
+
+import sys
+input = lambda : sys.stdin.readline().rstrip()
+
+N=int(input())
+
+sosu=[]
+for i in range(2,2000000): #2000000까지 소수 구하기
+    for j in range(2,int(i**0.5)+1):
+        if i%j==0:
+            break
+    else:
+        sosu.append(i)
+
+for i in range(N):
+    check=0
+    a,b=map(int,input().split())
+
+    c=a+b # c는 a,b값의 합
+    
+    if c<4: # 4보자 작으면 두 소수의 합이 될수 없다
+        print("NO")
+        continue
+    elif c%2==0: # 4보다 큰 짝수이면 골드바흐의 추측으로 두 소수의 합이 된다
+        print("YES")
+
+    else:  # 홀수 일 경우 홀수+훌수는 짝수가 될수 없으므로 홀수+짝수이여야 하는데 짝수는 2밖에 없으므로 2를 뺀 값이 소수인지 확인한다
+        if (c-2)>2000000: # 2000000 보다 크면 값이 너무 크기 때문에 미리 구한 소수값으로 나누어지면 소수가 아니게 된다.
+            for j in sosu:
+                if (c-2)%j==0:
+                    print("NO")
+                    break
+            else:
+                print("YES")
+                
+        else: # 2000000보다 작으면 미리 구한 값을 이용해 찾는다
+            if (c-2) in sosu:
+                print("YES")
+            else:
+                print("NO")
+        
+    
+
+        
