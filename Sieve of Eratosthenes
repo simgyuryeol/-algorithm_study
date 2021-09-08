@@ -1,3 +1,36 @@
+* 밀러라빈의 소수 판별법 : N이 소수인지 확률적으로 판단할 수 있는 판별법
+https://namnamseo.tistory.com/entry/MillerRabin-%EC%86%8C%EC%88%98-%ED%8C%90%EC%A0%95%EB%B2%95
+https://rebro.kr/46
+ 페르마의 소정리를 이용하여 이를 만족하는 수는 소수이고 하나라도 거짓이라면 소수가 아님
+ 2(log N)^2이하의 모든 a를 확인하면 소수인지 판별할 수 있다.
+ 
+long long power(long long x, long long y, long long mod){
+    long long res = 1;
+    x %= mod;
+    while(y){
+        if(y % 2) res = (res * x) % mod;
+        y /= 2;
+        x = (x*x) % mod;
+    }
+    return res;    
+}
+ 
+//if n is prime, return true
+bool miller(long long n, long long a){
+    if(a % n == 0) return false;
+    long long k = n-1;
+    while(1){
+        long long temp = power(a, k, n);
+        if(temp == n-1) return true; //a^k = -1 (mod n)
+        if(k%2) return (temp == 1 || temp == n-1);
+        k /= 2;
+    }
+}
+
+
+
+
+출처: https://rebro.kr/46 [Rebro의 코딩 일기장]
 * 에라토스테네스의 체 : 범위에서 합성수를 지우는 방식으로 소수를 찾는 방법. 
   1. 1은 제거
   2. 지워지지 않은 수 중 제일 작은 2를 소수로 채택하고, 나머지 2의 배수를 모두 지운다. 
