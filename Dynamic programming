@@ -1,0 +1,157 @@
+Dynamic programming(동적계획법)이란?
+ - 큰 문제를 작은문제로 나누어 푸는 문제를 일컫는 말
+ 
+Dynamic programming(동적계획법) vs Divide and Conquer(분할정복)
+  - 분할정복은 자근 문제로 나누어 푸는 방법. 작은 문제에서 반복이 일어나는 부분이 없는 반면 동적프로그래밍은 작은 부분 문제들이 반복되는 것(답이 바뀌지않음)을 이용해 풀어나가는 방법
+  
+Dynamic programming(동적계획법)
+ - 모든 작은 문제들은 한번만 풀어야 한다 따라서 정답을 구한 작은 문제는 어딘가에 메모해 놓고 
+  다시 그보다 큰 문제를 풀어나갈 때 똑같은 작은 문제가 나타나면 앞서 메모한 작은 문제의 결과값을 이용한다
+  
+Dynamic programming(동적계획법) 조건
+ - 작은 문제가 반복이 일어난다
+ - 같은 문제는 구할 때마다 정답이 같다
+ 
+ Memoization
+ - 메모제이션은 동적프로그래밍에서 작은 문제들이 반복되고 이 작은 문제들의 결과값이 같다는 것을 이용해 한번 계산한 작은 문제를 저장하고 다시 사용하는 것
+ 
+ ex) 피보나치 수열
+  
+  int d(int x){
+    if (x==1) return 1;
+    if (x==2) return 1;
+    return d(x-1) + d(x-2);
+    }
+    
+ * Memoization
+    int dx[100];
+    
+    int d(int x){
+    if (x==1) return 1;
+    if (x==2) return 1;
+    if(dx[x]!=0) return dx[x];
+    return dx[x] = d(x-1) + d(x-2);
+    }
+    
+ * Bottome-up
+  - 작은 문제부터 차근차근 구해나아가는 방법
+  def fibonacci_bootom-up(n):
+    if n<=1:
+      return n
+    fir = 0
+    sec = 1
+    for i in range(0,n-1):
+      next = fir+sec
+      fir=sec
+      sec=next
+    return next
+    
+   
+  
+ * Top-down
+  - 재귀함수로 구현하는 경우가 대부분이고 큰 문제를 풀 때 작은문제가 아직 풀리지 않았다면 그제서야 작은 문제를 해결하는 방법
+  
+  def fibonacci_top_down(n):
+    if memo[n]>0:
+      return memo[n]
+    if n <=1:
+      memo[n]= n
+      return memo[n]
+    else:
+      memo[n] = fibonacci_top_down(n-1) + fibonacci_top_down(n-1)
+      return memo[n]
+    
+  
+  * 막대 자르기(Top-down)
+var p = [0, 1, 5, 8, 9, 10, 17, 17, 20, 24, 30];
+function cutRod(p, n) {
+  var r = [0];
+  for (var j = 1; j <= n; j++) {
+    q = -1;
+    for (var i = 1; i <= j; i++) {
+      q = Math.max(q, p[i] + r[j - i]);
+    }
+    r[j] = q;
+  }
+  return r[n];
+}
+cutRod(p, 2); // 5
+cutRod(p, 3); // 8
+cutRod(p, 4); // 10
+cutRod(p, 7); // 18
+
+
+ * 최장 공통 부분 수열 문제
+ 
+ function LCS(x, y) {
+  var i = x.length;
+  var j = y.length;
+  var result = [];
+  for (var k = 0; k <= i; k++) {
+    if (!result[k]) {
+      result[k] = []; // 이전 계산 값 저장 공간
+    }
+  }
+  for (k = 0; k <= i; k++) {
+    for (var l = 0; l <= j; l++) {
+      console.log(k, l);
+      if (k === 0 || l === 0) { // 베이스 값 설정
+        result[k][l] = 0;
+      } else if (x[k - 1] === y[l - 1]) { // 마지막 두 문자 비교, 같으면
+        result[k][l] = result[k - 1][l - 1] + 1;
+      } else { // 마지막 두 문자가 다르면
+        result[k][l] = Math.max(result[k - 1][l], result[k][l - 1]);
+      }
+    }
+  }
+  return result[i][j];
+}
+LCS('ABCBDAB', 'BDCABA'); // 4
+
+
+ * 0/1 배낭문제
+ 
+ var item = [[1, 60, 10], [2, 100, 20], [3, 120, 30]];
+function zeroOneKnapsack(item, cap) {
+  var m = [];
+  for (var i = 0; i <= item.length; i++) {
+    m[i] = [];
+  }
+  for (i = 0; i < item.length + 1; i++) {
+    for (var j = 0; j <= cap; j++) {
+      if (i === 0 || j === 0) { // 물건이나 무게가 없음
+        m[i][j] = 0;
+      } else if (item[i-1][2] > j) { // 물건의 무게가 j보다 크면
+        m[i][j] = m[i-1][j];
+      } else {
+        m[i][j] = Math.max(m[i-1][j], m[i-1][j-item[i-1][2]] + item[i-1][1]);
+      }
+    }
+  }
+  return m[item.length][cap];
+}
+zeroOneKnapsack(item, 50); // 220
+    
+* 계단 오르기(백준 2579)
+def find(i):
+
+    if i==0: return hap[0]
+    if i<0: return 0
+    
+    if hap[i]!=0:
+        return hap[i]
+    
+    hap[i]=max(stair[i]+stair[i-1]+find(i-3),stair[i]+find(i-2))
+    
+    return hap[i]
+
+N=int(input())
+stair=[]
+for i in range(N):
+    stair.append(int(input()))
+
+hap=[0]*N
+hap[0]=stair[0]
+
+print(find(N-1))
+    
